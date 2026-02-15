@@ -17,10 +17,8 @@ st.markdown("""
 # --- 1. DATA LISTS ---
 sectors = {'XLE': 'Energy', 'XLF': 'Financials', 'XLI': 'Industrials', 'XLK': 'Technology', 'XLY': 'Cons Disc', 'XLP': 'Cons Staples', 'XLV': 'Health Care', 'XLU': 'Utilities', 'XLB': 'Materials', 'XLRE': 'Real Estate', 'XLC': 'Comm Services'}
 
-# Renamed to U.S. per request
 us_allocation = {'CGDV': 'Cap Group Div', 'DGRO': 'iShares Div Growth', 'DYNF': 'Equity Factor', 'ELM': 'Elm Navigator', 'GMOD': 'GMO Dynamic', 'MFUS': 'PIMCO Multi-Factor', 'TOPC': 'S&P 500 Capped', 'VLU': 'SPDR Value Tilt', 'XOEF': 'S&P 500 ex-100', 'XOEX': 'S&P 100 Ex-Top 20'}
 
-# Expanded International List (21 tickers)
 intl_list = {
     'AVDV': 'Avantis Intl SCV', 'DFIV': 'Dimensional Intl Val', 'EFAS': 'iShares MSCI EAFE', 
     'EYLD': 'Cambria Emerging', 'FEMR': 'Fid EM Risk', 'FIDI': 'Fid Intl Div', 
@@ -56,24 +54,7 @@ def render_table(ticker_dict):
         if tick_perf > spy_perf: score += 25
         if volumes[ticker].iloc[-1] > volumes[ticker].rolling(20).mean().iloc[-1]: score += 25
         
-        # Switched Name and Ticker order here
         rows.append({'Name': name, 'Ticker': ticker, 'Score': score, 'Price': current_price, 'RSI': rsi})
     
     df = pd.DataFrame(rows).sort_values('Score', ascending=False)
-    
-    # Hide the index (left-side numbers) and apply centering
     st.table(df.style.format({'Price': '{:.2f}', 'RSI': '{:.1f}'}).hide(axis='index'))
-
-# --- 4. THE TABS ---
-st.title("📊 Trading Master Control")
-t1, t2, t3, t4 = st.tabs(["Sectors", "U.S.", "International", "Study Log"])
-
-with t1:
-    render_table(sectors)
-with t2:
-    render_table(us_allocation)
-with t3:
-    render_table(intl_list)
-
-with t4:
-    st.header(f"Pre-Trade Checklist - {datetime.now().strftime('%Y-%m-%d')
